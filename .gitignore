@@ -1,0 +1,8 @@
+data/
+FLOOD_SHAPE/
+RAW_SHAPE/
+SHAPE/
+*.csv
+*.xlsx
+Credential.*
+*.parquet
