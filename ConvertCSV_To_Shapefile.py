@@ -20,9 +20,11 @@ print("nowStr's date:", nowStr,' -- ',type(nowStr))
 ###########################################################################
 
 previousdayStr=(date.today()-relativedelta(days=1)).strftime('%Y-%m-%d')
+firstStr=(date.today()).strftime('%Y%m%d')
 print(' previousdayStr : ',previousdayStr)
 
 previousweekStr=(date.today()-relativedelta(days=7)).strftime('%Y-%m-%d')
+secondStr=(date.today()-relativedelta(days=6)).strftime('%Y%m%d')
 print(' previousweekStr : ',previousweekStr)
 
 # # # 2 Directory containing your .csv files
@@ -42,7 +44,10 @@ writer2 = pd.ExcelWriter(output2_name, engine='openpyxl')
 # file_name='TH_province.shp'
 ### for operation : raw data with bad encoding
 sub_dir='\\RAW_SHAPE\\'
-file_name='flood7days_20211005_20210929.shp'
+root_word='flood7days_'
+#file_name='flood7days_20211006_20210930.shp'
+file_name=root_word+firstStr+'_'+secondStr+'.shp'
+
 #### for operation Reference Thai Version from Mac
 # sub_dir='\\FLOOD_SHAPE\\'
 # file_name='flood7days_20211004_20210928_Ver2.shp'
@@ -119,14 +124,14 @@ if(len(sjoined_listings)>0):
 
        df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
        print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-       df_sjoin.to_excel(file_path+'\\'+'FACTORY_intersection.xlsx')
+       #df_sjoin.to_excel(file_path+'\\'+'FACTORY_intersection.xlsx')
        ###w write data
        df_sjoin.to_excel(writer, sheet_name='FACTORY',index=False)
 
        grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
        grouped.columns=['province','FACTORY_in_FloodedArea_past7days']
        print(' group ---- ', grouped, ' :: ',type(grouped))
-       grouped.to_excel(file_path+'\\'+'FACTORY_group.xlsx', index=False)  
+       #grouped.to_excel(file_path+'\\'+'FACTORY_group.xlsx', index=False)  
        province_df=province_df.merge(grouped, on="province", how="left")
 
        grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
@@ -180,14 +185,14 @@ if(len(sjoined_listings)>0):
 
        df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
        print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-       df_sjoin.to_excel(file_path+'\\'+'TBL_intersection.xlsx')
+       #df_sjoin.to_excel(file_path+'\\'+'TBL_intersection.xlsx')
        ###w write data
        df_sjoin.to_excel(writer, sheet_name='TBL_WH_TRC',index=False)
 
        grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
        grouped.columns=['province','TBLs_in_FloodedArea_past7days']
        print(' group ---- ', grouped, ' :: ',type(grouped))
-       grouped.to_excel(file_path+'\\'+'TBL_group.xlsx', index=False)  
+       #grouped.to_excel(file_path+'\\'+'TBL_group.xlsx', index=False)  
        province_df=province_df.merge(grouped, on="province", how="left")
        
        grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
@@ -252,14 +257,14 @@ df_sjoin.rename(columns={'p_name_t_right':'province'}, inplace=True)
 
 df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
 print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-df_sjoin.to_excel(file_path+'\\'+'SS_intersection.xlsx')
+#df_sjoin.to_excel(file_path+'\\'+'SS_intersection.xlsx')
 ###w write data
 df_sjoin.to_excel(writer, sheet_name='SS',index=False)
 
 grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
 grouped.columns=['province','SSs_in_FloodedArea_past7days']
 print(' group ---- ', grouped, ' :: ',type(grouped))
-grouped.to_excel(file_path+'\\'+'SS_group.xlsx', index=False)
+#grouped.to_excel(file_path+'\\'+'SS_group.xlsx', index=False)
 province_df=province_df.merge(grouped, on="province", how="left")
 
 grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
@@ -290,25 +295,38 @@ print(' sjoin : ',sjoined_listings.head(5), ' --- ')
 
 del AGSUB_gdf
 
-df_sjoin=pd.DataFrame(sjoined_listings)
-df_sjoin.rename(columns={'p_name_t_right':'province'}, inplace=True)
+if(len(sjoined_listings)>0):       
+       df_sjoin=pd.DataFrame(sjoined_listings)
+       df_sjoin.rename(columns={'p_name_t_right':'province'}, inplace=True)
 
-df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
-print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-df_sjoin.to_excel(file_path+'\\'+'AGSUB_intersection.xlsx')
-###w write data
-df_sjoin.to_excel(writer, sheet_name='AG_SUB',index=False)
+       df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
+       print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
+       #df_sjoin.to_excel(file_path+'\\'+'AGSUB_intersection.xlsx')
+       ###w write data
+       df_sjoin.to_excel(writer, sheet_name='AG_SUB',index=False)
 
-grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
-grouped.columns=['province','AGSUBs_in_FloodedArea_past7days']
-print(' group ---- ', grouped, ' :: ',type(grouped))
-grouped.to_excel(file_path+'\\'+'AGSUB_group.xlsx', index=False)
-province_df=province_df.merge(grouped, on="province", how="left")
+       grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
+       grouped.columns=['province','AGSUBs_in_FloodedArea_past7days']
+       print(' group ---- ', grouped, ' :: ',type(grouped))
+       #grouped.to_excel(file_path+'\\'+'AGSUB_group.xlsx', index=False)
+       province_df=province_df.merge(grouped, on="province", how="left")
 
-grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
-grouped.columns=['Region','AGSUBs_in_FloodedArea_past7days']
-print(' group ---- ', grouped, ' :: ',type(grouped))
-region_df=region_df.merge(grouped, on="Region", how="left")
+       grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
+       grouped.columns=['Region','AGSUBs_in_FloodedArea_past7days']
+       print(' group ---- ', grouped, ' :: ',type(grouped))
+       region_df=region_df.merge(grouped, on="Region", how="left")
+else:
+       print('**************************************************')
+       print('********  No AGSUB in flooded areas ***************')
+       print('**************************************************')
+          
+       grouped=pd.DataFrame(list(zip(['-'],['-'])), columns=['province','AGSUBs_in_FloodedArea_past7days'])            
+       province_df=province_df.merge(grouped, on="province", how="left")
+       grouped=pd.DataFrame(list(zip(['-'],['-'])), columns=['Region','AGSUBs_in_FloodedArea_past7days'])            
+       region_df=region_df.merge(grouped, on="Region", how="left")
+       ###w write data
+       df_sjoin=pd.DataFrame()
+       df_sjoin.to_excel(writer, sheet_name='AGSUB',index=False)
 
 
 # ##############################################################################################################
@@ -336,7 +354,7 @@ df_sjoin=pd.DataFrame(sjoined_listings)
 df_sjoin.rename(columns={'p_name_t_right':'province'}, inplace=True)
 df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
 print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-df_sjoin.to_excel(file_path+'\\'+'CVM_intersection.xlsx')
+#df_sjoin.to_excel(file_path+'\\'+'CVM_intersection.xlsx')
 ###w write data
 df_sjoin.to_excel(writer, sheet_name='CVM',index=False)
 
@@ -344,7 +362,7 @@ grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
 grouped.columns=['province','CVMs_in_FloodedArea_past7days']
 print(' group ---- ', grouped, ' :: ',type(grouped))
 
-grouped.to_excel(file_path+'\\'+'CVM_group.xlsx', index=False)
+#grouped.to_excel(file_path+'\\'+'CVM_group.xlsx', index=False)
 province_df=province_df.merge(grouped, on="province", how="left")
 
 grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()
@@ -379,7 +397,7 @@ df_sjoin=pd.DataFrame(sjoined_listings)
 df_sjoin.rename(columns={'p_name_t_right':'province'}, inplace=True)
 df_sjoin['REF_PROV_EN']=df_sjoin.apply(lambda x: MapValue_Value(x['province'],provDict),axis=1)
 print(len(df_sjoin),' ------ ',df_sjoin.head(5),' ----- ',df_sjoin.columns)
-df_sjoin.to_excel(file_path+'\\'+'Employee_intersection_'+previousweekStr+'_.xlsx')
+#df_sjoin.to_excel(file_path+'\\'+'Employee_intersection_'+previousdayStr+'_.xlsx')
 ###w write data
 df_sjoin.to_excel(writer, sheet_name='Employee',index=False)
 
@@ -387,7 +405,7 @@ grouped=df_sjoin.groupby("province").size().to_frame().reset_index()
 grouped.columns=['province','Employees_in_FloodedArea_past7days']
 print(' group ---- ', grouped, ' :: ',type(grouped))
 
-grouped.to_excel(file_path+'\\'+'Employee_group_'+previousweekStr+'_.xlsx', index=False)
+#grouped.to_excel(file_path+'\\'+'Employee_group_'+previousdayStr+'_.xlsx', index=False)
 province_df=province_df.merge(grouped, on="province", how="left")
 
 grouped=df_sjoin.groupby("Region").size().to_frame().reset_index()

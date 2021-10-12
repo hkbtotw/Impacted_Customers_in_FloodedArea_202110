@@ -2,6 +2,9 @@
 
 Update:
 20211006 : Created by Tawan, T.
+20211012 : Add compute summary of impacted customers by province,
+           Add number of impacted customers based on extended areas for 100m  in radius from original flooded area boundary
+
 
 Why:
 1.During 2021-10, there was heavy rains and storms coming to Thailand and there were flooded areas in many locations in northern, nort-eatern and central Thailand.
@@ -19,3 +22,6 @@ Input:
 How:
 1.Use Shape file (Polygon of the flooded areas) and locations as Lat Lng points
 2.USe spiral join of geopandas to find the customer locations in the impacted area
+3.ConvertCSV_TO_Shapefile.py => general run
+4.ConvertCSV_TO_Shapefile_rev2.py => summary by province
+5.Flood_Read_ShapeFile.py => General run with extended boundaries
